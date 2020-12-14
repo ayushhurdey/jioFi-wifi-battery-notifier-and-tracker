@@ -86,13 +86,13 @@ if __name__ == "__main__":
                 now = datetime.now()
                 current_time = now.strftime("%H:%M:%S")
                 print("Time =", current_time, " Wifi battery = ", str(battery) + "%  ", battery_status)
-                '''
+                
                 try:
                         print("writing data to file...")
                         append_data_to_file(file_name, today.strftime("%b-%d-%Y"), current_time, str(battery) + "%", battery_status)
                 except PermissionError as e:
                         print("Problem opening file." + str(e))
-                '''
+                
                 data_used = str(round(getDataDetails(), 2))
                 clients = getClientsDetail()
                 extremely_low_battery_msg = "Few minutes of battery left.\nBattery Left: " + str(battery) + "%" + "\nStatus: " + battery_status + "\nData used: " + data_used +" MB"
