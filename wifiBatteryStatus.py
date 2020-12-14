@@ -35,15 +35,18 @@ def getDataDetails():
         req = requests.post('http://jiofi.local.html/cgi-bin/qcmap_web_cgi', data).json()
         download_data = req['total_data_used_dlink']
         upload_data = req['total_data_used_ulink']
-        total_data = float(re.findall('([0-9]+.[0-9]+) MB',download_data)[0]) + float(re.findall('([0-9]+.[0-9]+) MB',upload_data)[0])
-        print('download data =',download_data, ', upload data=', upload_data, ', total data=', round(total_data, 2), 'MB\n')
+        if(re.search(" MB$", download_data)):
+                total_data = float(re.findall('([0-9]+.[0-9]+) MB',download_data)[0]) + float(re.findall('([0-9]+.[0-9]+) MB',upload_data)[0])
+        else:
+                total_data = float(re.findall('([0-9]+.[0-9]+) GB',download_data)[0])*1024 + float(re.findall('([0-9]+.[0-9]+) MB',upload_data)[0])
+        print('download data =',download_data, ', upload data=', upload_data, ', total data=', round(total_data, 2), 'MB')
         return total_data
 
 def getClientsDetail():
         data = {"Page":"GetLANInfo","mask":"0","token":"0"}
         req = requests.post('http://jiofi.local.html/cgi-bin/qcmap_web_cgi', data).json()
         no_of_clients = int(req['connected_client_count'])
-        print(no_of_clients)
+        print('No of clients Connected=',no_of_clients, '\n')
         return no_of_clients
 
 def get_battery():
@@ -75,20 +78,21 @@ if __name__ == "__main__":
                         battery_status = get_battery_status()
                 except:
                         toast.show_toast("Wifi Not connected","Not on jioFi.",duration = 20,icon_path = r"assets\wifi.ico")
-                        time.sleep(200)
+                        print("Wifi not connected..")
+                        time.sleep(300)
                         continue
 
                 today = date.today()
                 now = datetime.now()
                 current_time = now.strftime("%H:%M:%S")
                 print("Time =", current_time, " Wifi battery = ", str(battery) + "%  ", battery_status)
-                
+                '''
                 try:
                         print("writing data to file...")
                         append_data_to_file(file_name, today.strftime("%b-%d-%Y"), current_time, str(battery) + "%", battery_status)
                 except PermissionError as e:
                         print("Problem opening file." + str(e))
-
+                '''
                 data_used = str(round(getDataDetails(), 2))
                 clients = getClientsDetail()
                 extremely_low_battery_msg = "Few minutes of battery left.\nBattery Left: " + str(battery) + "%" + "\nStatus: " + battery_status + "\nData used: " + data_used +" MB"
