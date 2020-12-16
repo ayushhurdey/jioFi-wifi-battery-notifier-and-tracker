@@ -36,9 +36,11 @@ def getDataDetails():
         download_data = req['total_data_used_dlink']
         upload_data = req['total_data_used_ulink']
         if(re.search(" MB$", download_data)):
-                total_data = float(re.findall('([0-9]+.[0-9]+) MB',download_data)[0]) + float(re.findall('([0-9]+.[0-9]+) MB',upload_data)[0])
+                total_data = float(re.findall('([0-9]*.[0-9]*) MB',download_data)[0]) + float(re.findall('([0-9]*.[0-9]*) MB',upload_data)[0])
+        elif(re.search(" KB$", download_data)):
+                total_data = (float(re.findall('([0-9]*.[0-9]*) KB',download_data)[0]) + float(re.findall('([0-9]*.[0-9]*) KB',upload_data)[0]))/1024
         else:
-                total_data = float(re.findall('([0-9]+.[0-9]+) GB',download_data)[0])*1024 + float(re.findall('([0-9]+.[0-9]+) MB',upload_data)[0])
+                total_data = float(re.findall('([0-9]*.[0-9]*) GB',download_data)[0])*1024 + float(re.findall('([0-9]*.[0-9]*) MB',upload_data)[0])
         print('download data =',download_data, ', upload data=', upload_data, ', total data=', round(total_data, 2), 'MB')
         return total_data
 
@@ -93,8 +95,14 @@ if __name__ == "__main__":
                 except PermissionError as e:
                         print("Problem opening file." + str(e))
                 
-                data_used = str(round(getDataDetails(), 2))
-                clients = getClientsDetail()
+                try:
+                        data_used = str(round(getDataDetails(), 2))
+                except:
+                        print("Some error occured while getting data details!!!!\n\n")
+                try:
+                        clients = getClientsDetail()
+                except:
+                        print("Some error occured while getting clients information.")
                 extremely_low_battery_msg = "Few minutes of battery left.\nBattery Left: " + str(battery) + "%" + "\nStatus: " + battery_status + "\nData used: " + data_used +" MB"
                 medium_battery_msg = "Wifi battery is about to black out.\nBattery Left: " + str(battery) + "%" + "\nStatus: " + battery_status + "\nData used: " + data_used + " MB"
                 battery_full_msg = "Battery Level: " + str(battery) + "%" + "\nStatus: " + battery_status + "\nData used: " + data_used + " MB"
