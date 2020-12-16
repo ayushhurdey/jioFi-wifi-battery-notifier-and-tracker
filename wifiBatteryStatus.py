@@ -35,10 +35,13 @@ def getDataDetails():
         req = requests.post('http://jiofi.local.html/cgi-bin/qcmap_web_cgi', data).json()
         download_data = req['total_data_used_dlink']
         upload_data = req['total_data_used_ulink']
-        if(re.search(" MB$", download_data)):
+        if(re.search(" KB$", upload_data)):
+                if(re.search(" KB$", download_data)):
+                        total_data = (float(re.findall('([0-9]*.[0-9]*) KB',download_data)[0]) + float(re.findall('([0-9]*.[0-9]*) KB',upload_data)[0]))/1024
+                else:
+                        total_data = float(re.findall('([0-9]*.[0-9]*) MB',download_data)[0]) + float(re.findall('([0-9]*.[0-9]*) KB',upload_data)[0])/1024
+        elif(re.search(" MB$", download_data)):
                 total_data = float(re.findall('([0-9]*.[0-9]*) MB',download_data)[0]) + float(re.findall('([0-9]*.[0-9]*) MB',upload_data)[0])
-        elif(re.search(" KB$", download_data)):
-                total_data = (float(re.findall('([0-9]*.[0-9]*) KB',download_data)[0]) + float(re.findall('([0-9]*.[0-9]*) KB',upload_data)[0]))/1024
         else:
                 total_data = float(re.findall('([0-9]*.[0-9]*) GB',download_data)[0])*1024 + float(re.findall('([0-9]*.[0-9]*) MB',upload_data)[0])
         print('download data =',download_data, ', upload data=', upload_data, ', total data=', round(total_data, 2), 'MB')
@@ -94,11 +97,14 @@ if __name__ == "__main__":
                         append_data_to_file(file_name, today.strftime("%b-%d-%Y"), current_time, str(battery) + "%", battery_status)
                 except PermissionError as e:
                         print("Problem opening file." + str(e))
-                
+
+                data_used = str(-1)
                 try:
                         data_used = str(round(getDataDetails(), 2))
                 except:
                         print("Some error occured while getting data details!!!!\n\n")
+
+                clients = -1
                 try:
                         clients = getClientsDetail()
                 except:
