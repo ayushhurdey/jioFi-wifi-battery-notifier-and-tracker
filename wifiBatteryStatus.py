@@ -103,12 +103,17 @@ if __name__ == "__main__":
                         data_used = str(round(getDataDetails(), 2))
                 except:
                         print("Some error occured while getting data details!!!!\n\n")
+                        time.sleep(300)
+                        continue
 
                 clients = -1
                 try:
                         clients = getClientsDetail()
                 except:
                         print("Some error occured while getting clients information.")
+                        time.sleep(300)
+                        continue
+                
                 extremely_low_battery_msg = "Few minutes of battery left.\nBattery Left: " + str(battery) + "%" + "\nStatus: " + battery_status + "\nData used: " + data_used +" MB"
                 medium_battery_msg = "Wifi battery is about to black out.\nBattery Left: " + str(battery) + "%" + "\nStatus: " + battery_status + "\nData used: " + data_used + " MB"
                 battery_full_msg = "Battery Level: " + str(battery) + "%" + "\nStatus: " + battery_status + "\nData used: " + data_used + " MB"
