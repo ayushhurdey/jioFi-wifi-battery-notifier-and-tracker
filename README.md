@@ -21,4 +21,13 @@ A simple python program to notify the battery left and status of JioFi battery
 
 #### `Word of caution:` Works only with jioFi.
 
- <img src = "project-pic.png">
+ <img src = "assets/project-pic.png">
+
+
+ `Jiofi Logs:`
+ <img src = "assets/Jiofi-notifier.jpg">
+
+
+ `Jiofi in the taskbar:`
+
+<img src = "assets/jiofi-taskbar-pic.jpg">
